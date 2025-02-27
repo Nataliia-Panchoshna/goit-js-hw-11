@@ -1,47 +1,38 @@
-import iziToast from 'izitoast';
-import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import { iziOption } from '../main';
 
-export function markup(data) {
-  let { hits } = data;
-  const box = document.querySelector('.gallery');
+const gallery = document.querySelector('.gallery');
+let lightbox;
 
-  if (hits.length === 0) {
-    iziToast.show({
-      ...iziOption,
-      message:
-        'Sorry, there are no images matching your search query. Please, try again!',
-    });
-    box.innerHTML = '';
-
-    return;
-  }
-  const markup = hits
+export function renderImages(images) {
+  gallery.innerHTML = images
     .map(
-      image =>
-        `<li class='gallery__item'>
-        <a class='gallery__link' href="${image.largeImageURL}">
-        <img class='gallery__img' src="${image.webformatURL}" alt="${image.tags}" />
-          <div class="grid">
-            <p>Likes</p>
-            <p>Views</p>
-            <p>Comment</p>
-            <p>Downloads</p>
-            <span>${image.likes}</span>
-            <span>${image.views}</span>
-            <span>${image.comments}</span>
-            <span>${image.downloads}</span>
-          </div>
-        </a>
-      </li>`
+      ({
+        webformatURL,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => `<li class="gallery-item">
+      <a href="${largeImageURL}" class="gallery-link">
+        <img src="${webformatURL}" alt="${tags}" />
+        <div class="info">
+          <p>Likes: ${likes}</p>
+          <p>Views: ${views}</p>
+          <p>Comments: ${comments}</p>
+          <p>Downloads: ${downloads}</p>
+        </div>
+      </a>
+      </li>
+    `
     )
-    .join(' ');
-  box.innerHTML = markup;
-  const lightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionDelay: 250,
-  });
-  lightbox.refresh();
+    .join('');
+
+  if (lightbox) {
+    lightbox.refresh();
+  } else {
+    lightbox = new SimpleLightbox('.gallery a');
+  }
 }
