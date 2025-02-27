@@ -1,17 +1,39 @@
-import axios from 'axios';
+import { markup } from '/js/render-functions';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
+import { iziOption } from '../main';
 
-const API_KEY = 'YOUR_PIXABAY_API_KEY';
-const BASE_URL = 'https://pixabay.com/api/';
+export function getImage(input) {
+  const box = document.querySelector('.gallery');
+  const API_KEY = '49078062-013dc20f7945f56078ec7160a';
+  const query = encodeURIComponent(input);
+  const urlParams = new URLSearchParams({
+    key: API_KEY,
+    q: query,
+    image_type: 'photo',
+    orientation: 'horizontal',
+    safesearch: 'true',
+  });
 
-export async function fetchImages(query) {
-    const response = await axios.get(BASE_URL, {
-        params: {
-            key: API_KEY= '49078062-013dc20f7945f56078ec7160a',
-            q: query,
-            image_type: 'photo',
-            orientation: 'horizontal',
-            safesearch: true,
-        }
+  const URL = `https://pixabay.com/api/?${urlParams}`;
+
+  return fetch(URL)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      return markup(data);
+    })
+    .catch(error => {
+      console.error(error);
+      box.innerHTML = '';
+      iziToast.show({
+        ...iziOption,
+        message: 'Sorry, an error happened. Try again',
+      });
+      return;
     });
-    return response.data.hits;
 }
