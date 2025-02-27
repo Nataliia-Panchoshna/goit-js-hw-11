@@ -1,44 +1,32 @@
-import { fetchImages } from './js/pixabay-api';
-import { renderGallery, clearGallery } from './js/render-functions';
-import iziToast from "izitoast";
-import "izitoast/dist/css/iziToast.min.css";
+import { getImage } from './js/pixabay-api';
+import errorIcon from './img/error.svg';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
-const searchForm = document.querySelector('#search-form');
-const gallery = document.querySelector('.gallery');
+export const iziOption = {
+  messageColor: '#FAFAFB',
+  messageSize: '16px',
+  backgroundColor: '#EF4040',
+  iconUrl: errorIcon,
+  transitionIn: 'bounceInLeft',
+  position: 'topRight',
+  displayMode: 'replace',
+  closeOnClick: true,
+};
 
-searchForm.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    
-    const query = event.target.elements.searchQuery.value.trim();
-    if (!query) {
-        iziToast.warning({
-            title: "Warning",
-            message: "Please enter a search term!",
-            position: "topRight"
-        });
-        return;
-    }
-    
-    clearGallery();
-    
-    try {
-        const images = await fetchImages(query);
-        
-        if (images.length === 0) {
-            iziToast.error({
-                title: "Error",
-                message: "Sorry, no images found. Please try another query!",
-                position: "topRight"
-            });
-            return;
-        }
-        
-        renderGallery(images);
-    } catch (error) {
-        iziToast.error({
-            title: "Error",
-            message: "Something went wrong. Please try again later!",
-            position: "topRight"
-        });
-    }
+document.querySelector('.form').addEventListener('submit', event => {
+  const input = document.querySelector('.user-input').value.trim();
+  const box = document.querySelector('.gallery');
+  event.preventDefault();
+
+  if (!input) {
+    iziToast.show({
+      ...iziOption,
+      message: 'Please enter the search query',
+    });
+    return;
+  }
+  box.innerHTML =
+    '<p>Wait, the image is loaded</p><span class="loader"></span>';
+  getImage(input);
 });
