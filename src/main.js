@@ -1,5 +1,4 @@
 import { getImage } from './js/pixabay-api';
-import errorIcon from './img/error.svg';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
