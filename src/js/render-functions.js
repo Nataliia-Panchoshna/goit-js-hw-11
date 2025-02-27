@@ -16,9 +16,9 @@ export function renderImages(images) {
         comments,
         downloads,
       }) => `<li class="gallery-item">
-      <a href="${largeImageURL}"class="gallery-link">
+      <a href="${largeImageURL}" class="gallery-link">
         <img src="${webformatURL}" alt="${tags}" />
-        <div class="grid">
+        <div class="info">
           <p>Likes: ${likes}</p>
           <p>Views: ${views}</p>
           <p>Comments: ${comments}</p>
