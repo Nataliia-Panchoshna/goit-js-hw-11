@@ -6,7 +6,7 @@ const BASE_URL = 'https://pixabay.com/api/';
 export async function fetchImages(query) {
     const response = await axios.get(BASE_URL, {
         params: {
-            key: API_KEY,
+            key: API_KEY= '49078062-013dc20f7945f56078ec7160a',
             q: query,
             image_type: 'photo',
             orientation: 'horizontal',
